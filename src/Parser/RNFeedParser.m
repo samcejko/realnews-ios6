@@ -33,21 +33,8 @@
         return nil;
     }
 
-    // Ensure XML has an encoding declaration. NSXMLParser defaults to ISO-8859-1
-    // when no <?xml encoding="..."> is present, causing mojibake for UTF-8 feeds
-    // like ČT24 (Č → ÄŒ, á → Ã¡). Prepend UTF-8 declaration if missing.
-    NSData *parseData = data;
-    if (data.length >= 2) {
-        const char *bytes = (const char *)data.bytes;
-        if (!(bytes[0] == '<' && bytes[1] == '?')) {
-            NSString *xmlDecl = @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-            NSData *declData = [xmlDecl dataUsingEncoding:NSUTF8StringEncoding];
-            NSMutableData *mutableData = [NSMutableData dataWithData:declData];
-            [mutableData appendData:data];
-            parseData = mutableData;
-        }
-    }
-
+    // Let the XML parser detect the encoding from the original bytes. XML defaults
+    // to UTF-8 without a declaration; prepending one breaks BOMs and UTF-16 feeds.
     RNFeedParser *parser = [[RNFeedParser alloc] init];
     parser->_feedURL = [feedURL copy];
     parser->_items = [NSMutableArray array];
@@ -55,7 +42,7 @@
     parser->_elementStack = [NSMutableArray array];
     parser->_textStack = [NSMutableArray array];
 
-    NSXMLParser *xml = [[NSXMLParser alloc] initWithData:parseData];
+    NSXMLParser *xml = [[NSXMLParser alloc] initWithData:data];
     [xml setShouldProcessNamespaces:NO]; // Keep exact tag prefixes like content:encoded, dc:creator
     [xml setShouldReportNamespacePrefixes:NO];
     [xml setShouldResolveExternalEntities:NO];

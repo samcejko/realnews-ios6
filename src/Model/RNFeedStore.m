@@ -89,46 +89,35 @@
         }
     }
 
-    // Migrate potentially corrupted feed titles from UTF-8 mojibake
-    // Common patterns: Ä -> Č/Š/Ž, Ã¡ -> á/é/í/ó/ú/ý, etc.
-    // Only fix feeds that haven't been customized by user
+    // Repair only exact known corrupted defaults; preserve custom feed names.
+    NSDictionary *legacyDefaults = @{
+        @"─îT24 - Hlavn├¡ zpr├ívy": @"ČT24 - Hlavní zprávy",
+        @"Zpr├ívy ─îT24 na t├⌐ma V├╜b─¢r redakce": @"Zprávy ČT24 na téma Výběr redakce",
+        @"ÄŒT24 - HlavnÃ­ zprÃ¡vy": @"ČT24 - Hlavní zprávy",
+        @"─îT24 - Hlavn├ş zpr├ívy": @"ČT24 - Hlavní zprávy",
+        @"ÄŒT24": @"ČT24",
+        @"─îT24": @"ČT24",
+        @"ZprÃ¡vy ÄŒT24 na tÃ©ma VÃ½bÄ›r redakce": @"Zprávy ČT24 na téma Výběr redakce",
+        @"Zpr├ívy ─îT24 na t├ęma V├Żb─Ťr redakce": @"Zprávy ČT24 na téma Výběr redakce",
+        @"ZprÃ¡vy": @"Zprávy",
+        @"Zpr├ívy": @"Zprávy",
+        @"ÄŒT24 - Hlavn├¡ zpr├ívy": @"ČT24 - Hlavní zprávy",
+        @"Zpr├ívy ├îT24 na t├⌐ma V├╜b─¢r redakce": @"Zprávy ČT24 na téma Výběr redakce"
+    };
     BOOL migratedCorruptedTitle = NO;
     for (RNFeed *feed in _feeds) {
-        // Check if title looks like UTF-8 mojibake (common Czech corruption patterns)
-        if (feed.title.length && [self appearsToBeMojibake:feed.title]) {
-            // Only migrate if it matches our default pattern or user hasn't customized it
-            if ([feed.title isEqualToString:@"ÄŒT24 - Hlavn├¡ zpr├ívy"] ||
-                [feed.title isEqualToString:@"ÄŒT24"] ||
-                [feed.title isEqualToString:@"Zpr├ívy ├îT24 na t├⌐ma V├╜b─¢r redakce"]) {
-                NSString *fixedTitle = [self fixMojibake:feed.title];
-                if (fixedTitle && ![fixedTitle isEqualToString:feed.title]) {
-                    feed.title = fixedTitle;
-                    migratedCorruptedTitle = YES;
-                }
-            }
-            // Also fix category if it's corrupted
-            if (feed.category.length && [self appearsToBeMojibake:feed.category]) {
-                NSString *fixedCategory = [self fixMojibake:feed.category];
-                if (fixedCategory && ![fixedCategory isEqualToString:feed.category]) {
-                    feed.category = fixedCategory;
-                    migratedCorruptedTitle = YES;
-                }
-            }
-            // Also fix feedDescription if it's corrupted
-            if (feed.feedDescription.length && [self appearsToBeMojibake:feed.feedDescription]) {
-                NSString *fixedDescription = [self fixMojibake:feed.feedDescription];
-                if (fixedDescription && ![fixedDescription isEqualToString:feed.feedDescription]) {
-                    feed.feedDescription = fixedDescription;
-                    migratedCorruptedTitle = YES;
-                }
-            }
+        NSString *title = feed.title ? [legacyDefaults objectForKey:feed.title] : nil;
+        NSString *category = feed.category ? [legacyDefaults objectForKey:feed.category] : nil;
+        if (title) {
+            feed.title = title;
+            migratedCorruptedTitle = YES;
+        }
+        if (category) {
+            feed.category = category;
+            migratedCorruptedTitle = YES;
         }
     }
-    
-    // Save if we migrated any corrupted data
-    if (migratedCorruptedTitle) {
-        [self save];
-    }
+    if (migratedCorruptedTitle) [self save];
 
     // Default starter feeds if first launch
     if (![[NSFileManager defaultManager] fileExistsAtPath:_storePath]) {
@@ -465,60 +454,6 @@
 - (void)clearAllCache
 {
     [[RNImageLoader shared] clearCache];
-}
-
-- (BOOL)appearsToBeMojibake:(NSString *)str
-{
-    // Detect common UTF-8 → Latin-1 mojibake patterns for Czech
-    // Č = 0xC4 0x8C → ÄŒ, Š = 0xC5 0xA0 → Å , Ž = 0xC5 0xBD → Å½
-    // á = 0xC3 0xA1 → Ã¡, é = 0xC3 0xA9 → Ã©, í = 0xC3 0xAD → Ã­, ó = 0xC3 0xB3 → Ã³, ú = 0xC3 0xBA → Ãº, ý = 0xC3 0xBD → Ã½
-    // ě = 0xC4 0x9B -> Ä›, ů = 0xC5 0xAF -> Å¯
-    return [str rangeOfString:@"Ä"].location != NSNotFound ||
-           [str rangeOfString:@"Å"].location != NSNotFound ||
-           [str rangeOfString:@"Ã"].location != NSNotFound;
-}
-
-- (NSString *)fixMojibake:(NSString *)str
-{
-    // Fix common UTF-8 → Latin-1 mojibake for Czech
-    NSMutableString *fixed = [str mutableCopy];
-    
-    // Czech characters: UTF-8 bytes misinterpreted as Latin-1
-    [fixed replaceOccurrencesOfString:@"ÄŒ" withString:@"Č" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ä‰" withString:@"É" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Å " withString:@"Š" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Å½" withString:@"Ž" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"ÄŒ" withString:@"Č" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ä" withString:@"č" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Å¡" withString:@"š" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Å¾" withString:@"ž" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ä›" withString:@"ě" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Å¯" withString:@"ů" options:0 range:NSMakeRange(0, fixed.length)];
-    
-    // Accented vowels
-    [fixed replaceOccurrencesOfString:@"Ã¡" withString:@"á" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã©" withString:@"é" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã­" withString:@"í" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã³" withString:@"ó" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ãº" withString:@"ú" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã½" withString:@"ý" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã" withString:@"Á" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã‰" withString:@"É" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã" withString:@"Í" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã" withString:@"Ó" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ãš" withString:@"Ú" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"Ã" withString:@"Ý" options:0 range:NSMakeRange(0, fixed.length)];
-    
-    // Other common corruptions
-    [fixed replaceOccurrencesOfString:@"â€" withString:@"\"" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"â€\u201d" withString:@"\"" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"â€˜" withString:@"'" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"â€™" withString:@"'" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"â€" withString:@"–" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"â€" withString:@"—" options:0 range:NSMakeRange(0, fixed.length)];
-    [fixed replaceOccurrencesOfString:@"â€¦" withString:@"…" options:0 range:NSMakeRange(0, fixed.length)];
-    
-    return [fixed copy];
 }
 
 @end
