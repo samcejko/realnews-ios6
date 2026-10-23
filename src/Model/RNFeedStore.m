@@ -101,7 +101,7 @@
                 [feed.title isEqualToString:@"ÄŒT24"] ||
                 [feed.title isEqualToString:@"Zpr├ívy ├îT24 na t├⌐ma V├╜b─¢r redakce"]) {
                 NSString *fixedTitle = [self fixMojibake:feed.title];
-                if (fixedTitle && !fixedTitle.isEqualToString(feed.title)) {
+                if (fixedTitle && ![fixedTitle isEqualToString:feed.title]) {
                     feed.title = fixedTitle;
                     migratedCorruptedTitle = YES;
                 }
@@ -109,7 +109,7 @@
             // Also fix category if it's corrupted
             if (feed.category.length && [self appearsToBeMojibake:feed.category]) {
                 NSString *fixedCategory = [self fixMojibake:feed.category];
-                if (fixedCategory && !fixedCategory.isEqualToString(feed.category)) {
+                if (fixedCategory && ![fixedCategory isEqualToString:feed.category]) {
                     feed.category = fixedCategory;
                     migratedCorruptedTitle = YES;
                 }
@@ -117,7 +117,7 @@
             // Also fix feedDescription if it's corrupted
             if (feed.feedDescription.length && [self appearsToBeMojibake:feed.feedDescription]) {
                 NSString *fixedDescription = [self fixMojibake:feed.feedDescription];
-                if (fixedDescription && !fixedDescription.isEqualToString(feed.feedDescription)) {
+                if (fixedDescription && ![fixedDescription isEqualToString:feed.feedDescription]) {
                     feed.feedDescription = fixedDescription;
                     migratedCorruptedTitle = YES;
                 }
@@ -473,7 +473,9 @@
     // Č = 0xC4 0x8C → ÄŒ, Š = 0xC5 0xA0 → Å , Ž = 0xC5 0xBD → Å½
     // á = 0xC3 0xA1 → Ã¡, é = 0xC3 0xA9 → Ã©, í = 0xC3 0xAD → Ã­, ó = 0xC3 0xB3 → Ã³, ú = 0xC3 0xBA → Ãº, ý = 0xC3 0xBD → Ã½
     // ě = 0xC4 0x9B -> Ä›, ů = 0xC5 0xAF -> Å¯
-    return [str containsString:@"Ä"] || [str containsString:@"Å"] || [str containsString:@"Ã"];
+    return [str rangeOfString:@"Ä"].location != NSNotFound ||
+           [str rangeOfString:@"Å"].location != NSNotFound ||
+           [str rangeOfString:@"Ã"].location != NSNotFound;
 }
 
 - (NSString *)fixMojibake:(NSString *)str
