@@ -1,0 +1,11 @@
+.theos/
+_theos/
+packages/
+build/
+*.deb
+*.ipa
+.DS_Store
+local.json
+vendor/mbedtls/
+vendor/libwebp/
+

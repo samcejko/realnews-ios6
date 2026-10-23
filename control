@@ -1,0 +1,9 @@
+Package: com.samcejko.realnews
+Name: RealNews
+Version: 1.0.5
+Architecture: iphoneos-arm
+Description: RSS and Atom feed reader for iOS 6 with support for all XML fields and custom metadata
+Maintainer: samcejko
+Author: samcejko
+Section: News
+Depends: firmware (>= 5.0), firmware (<< 11.0)

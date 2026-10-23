@@ -1,0 +1,67 @@
+/* Czech localization for RealNews */
+"AppTitle" = "RealNews";
+"Feeds" = "Kanály";
+"Articles" = "Články";
+"AllUnread" = "Všechny nepřečtené";
+"Starred" = "S hvězdičkou";
+"AddFeed" = "Přidat kanál";
+"FeedURL" = "URL kanálu";
+"FeedTitle" = "Název (volitelný)";
+"Cancel" = "Zrušit";
+"Save" = "Uložit";
+"Delete" = "Smazat";
+"Edit" = "Upravit";
+"Done" = "Hotovo";
+"Refresh" = "Aktualizovat";
+"Settings" = "Nastavení";
+"MarkAllAsRead" = "Označit vše jako přečtené";
+"MarkAsRead" = "Označit jako přečtené";
+"MarkAsUnread" = "Označit jako nepřečtené";
+"Star" = "Přidat hvězdičku";
+"Unstar" = "Odebrat hvězdičku";
+"OpenInSafari" = "Otevřít v Safari";
+"CopyLink" = "Kopírovat odkaz";
+"Share" = "Sdílet";
+"AllFields" = "Všechna pole";
+"Metadata" = "Metadata";
+"NoArticles" = "Žádné články";
+"NoFeeds" = "Žádné kanály";
+"NoFeedsHint" = "Klepnutím na + přidejte RSS nebo Atom kanál.";
+"LoadingFeed" = "Aktualizace kanálu...";
+"FeedError" = "Nepodařilo se stáhnout kanál";
+"ClearCache" = "Vymazat mezipaměť obrázků";
+"CacheCleared" = "Mezipaměť obrázků byla promazána.";
+"KeepArticles" = "Ponechávat články";
+"Days7" = "7 dní";
+"Days14" = "14 dní";
+"Days30" = "30 dní";
+"DaysForever" = "Napolnaplno / trvale";
+"MaxItemsPerFeed" = "Max. článků na kanál";
+"Attachment" = "Příloha";
+"DownloadAttachment" = "Otevřít přílohu";
+"PublishedOn" = "Publikováno";
+"ByAuthor" = "Autor: %@";
+
+"FeedURLPlaceholder" = "https://example.com/ (nebo URL kanálu)";
+
+"FindFeed" = "Najít";
+
+"FeedTitleOptional" = "Název kanálu (nepovinný)";
+
+"CategoryOptional" = "Kategorie (nepovinná)";
+
+"FeedFound" = "Kanál nalezen!";
+
+"ChooseFeed" = "Vyberte kanál:";
+
+"NoFeedFound" = "Nenalezeno";
+
+"NoFeedFoundMessage" = "Na této adrese nebyl nalezen žádný RSS ani Atom kanál.";
+
+"Error" = "Chyba";
+
+"EnterFeedURL" = "Zadejte platnou adresu kanálu.";
+
+"NotAFeed" = "Tato adresa neobsahuje RSS ani Atom kanál.";
+"SearchArticles" = "Hledat články...";
+"InvalidHTTPBody" = "Server odeslal neúplnou nebo neplatnou odpověď.";

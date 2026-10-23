@@ -1,0 +1,67 @@
+/* English localization for RealNews */
+"AppTitle" = "RealNews";
+"Feeds" = "Feeds";
+"Articles" = "Articles";
+"AllUnread" = "All Unread";
+"Starred" = "Starred Articles";
+"AddFeed" = "Add Feed";
+"FeedURL" = "Feed URL";
+"FeedTitle" = "Title (Optional)";
+"Cancel" = "Cancel";
+"Save" = "Save";
+"Delete" = "Delete";
+"Edit" = "Edit";
+"Done" = "Done";
+"Refresh" = "Refresh";
+"Settings" = "Settings";
+"MarkAllAsRead" = "Mark All as Read";
+"MarkAsRead" = "Mark as Read";
+"MarkAsUnread" = "Mark as Unread";
+"Star" = "Star";
+"Unstar" = "Unstar";
+"OpenInSafari" = "Open in Safari";
+"CopyLink" = "Copy Link";
+"Share" = "Share";
+"AllFields" = "All Fields";
+"Metadata" = "Metadata";
+"NoArticles" = "No Articles";
+"NoFeeds" = "No Feeds Added";
+"NoFeedsHint" = "Tap + to add an RSS or Atom feed.";
+"LoadingFeed" = "Updating feed...";
+"FeedError" = "Failed to update feed";
+"ClearCache" = "Clear Image Cache";
+"CacheCleared" = "Image cache cleared.";
+"KeepArticles" = "Keep Articles";
+"Days7" = "7 days";
+"Days14" = "14 days";
+"Days30" = "30 days";
+"DaysForever" = "Forever";
+"MaxItemsPerFeed" = "Max Items per Feed";
+"Attachment" = "Attachment";
+"DownloadAttachment" = "Open Attachment";
+"PublishedOn" = "Published";
+"ByAuthor" = "By %@";
+
+"FeedURLPlaceholder" = "https://example.com/ (or feed URL)";
+
+"FindFeed" = "Find";
+
+"FeedTitleOptional" = "Feed title (optional)";
+
+"CategoryOptional" = "Category (optional)";
+
+"FeedFound" = "Feed found!";
+
+"ChooseFeed" = "Choose a feed:";
+
+"NoFeedFound" = "Not found";
+
+"NoFeedFoundMessage" = "No RSS or Atom feed was found at this address.";
+
+"Error" = "Error";
+
+"EnterFeedURL" = "Please enter a valid feed URL.";
+
+"NotAFeed" = "This address does not contain an RSS or Atom feed.";
+"SearchArticles" = "Search articles...";
+"InvalidHTTPBody" = "The server sent an incomplete or invalid response.";
