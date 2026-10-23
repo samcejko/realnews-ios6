@@ -42,8 +42,9 @@
         if (!(bytes[0] == '<' && bytes[1] == '?')) {
             NSString *xmlDecl = @"<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
             NSData *declData = [xmlDecl dataUsingEncoding:NSUTF8StringEncoding];
-            parseData = [NSMutableData dataWithData:declData];
-            [parseData appendData:data];
+            NSMutableData *mutableData = [NSMutableData dataWithData:declData];
+            [mutableData appendData:data];
+            parseData = mutableData;
         }
     }
 
