@@ -136,9 +136,28 @@ static UIImage *ORBarImage(BOOL black, CGFloat above, CGFloat height)
     return [image resizableImageWithCapInsets:UIEdgeInsetsMake(1, 0, 1, 0) resizingMode:UIImageResizingModeStretch];
 }
 
+static UIColor *ORNavigationButtonTint, *ORDoneButtonTint;
+void RNModernSetNavigationButtonTint(UIColor *normalTint, UIColor *doneTint)
+{
+    if (!RNModernIOS()) return;
+    ORNavigationButtonTint=normalTint; ORDoneButtonTint=doneTint ?: normalTint;
+}
+static unsigned ORTintShade(UIColor *color, CGFloat factor)
+{
+    CGFloat r=0,g=0,b=0,a=1;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    return ((unsigned)lrint(MIN(1,r*factor)*255)<<16) | ((unsigned)lrint(MIN(1,g*factor)*255)<<8) | (unsigned)lrint(MIN(1,b*factor)*255);
+}
+
 // Bordered bar buttons: normal, pressed and the blue "Done" style, on the blue or the black bar
 static ORGloss ORButtonGloss(BOOL black, BOOL highlighted, BOOL done)
 {
+    UIColor *tint=done ? ORDoneButtonTint : ORNavigationButtonTint;
+    if (tint) {
+        CGFloat pressed=highlighted ? .75 : 1;
+        ORGloss themed={ORTintShade(tint,1.45*pressed),ORTintShade(tint,1.05*pressed),ORTintShade(tint,.98*pressed),ORTintShade(tint,.78*pressed),ORTintShade(tint,.45*pressed),highlighted?.15:.35};
+        return themed;
+    }
     if (done) {
         ORGloss d = { 0x6aa0e6, 0x3c7cd8, 0x3374d4, 0x2563c6, 0x1d478a, 0.4 };
         ORGloss dh = { 0x4e7fc4, 0x2a62b8, 0x235bb4, 0x184ea6, 0x15397a, 0.2 };

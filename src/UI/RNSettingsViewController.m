@@ -49,6 +49,7 @@
     UIBarButtonItem *doneBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                              target:self
                                                                              action:@selector(done)];
+    doneBtn.style = UIBarButtonItemStyleDone;
     self.navigationItem.rightBarButtonItem = doneBtn;
 }
 

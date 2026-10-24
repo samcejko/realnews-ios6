@@ -89,6 +89,8 @@
     UIBarButtonItem *saveBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                              target:self
                                                                              action:@selector(save)];
+    self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
+    saveBtn.style = UIBarButtonItemStyleDone;
     self.navigationItem.rightBarButtonItem = saveBtn;
 
     _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -209,6 +211,7 @@
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                                    target:self
                                                                                                    action:@selector(save)];
+    self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
 
             if (feeds.count == 1) {
                 RNDiscoveredFeed *f = [feeds objectAtIndex:0];
@@ -364,6 +367,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                            target:self
                                                                                            action:@selector(save)];
+    self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
     UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:L(@"FeedError")
                                                     message:error.localizedDescription
                                                    delegate:nil

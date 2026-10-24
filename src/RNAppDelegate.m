@@ -21,6 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    RNModernSetNavigationButtonTint([RNTheme brandDarkOrangeColor], [UIColor colorWithRed:.70 green:.08 blue:.025 alpha:1]);
     RNModernSetUp(UIBarStyleDefault);
     [RNTheme applyAppearance];
 

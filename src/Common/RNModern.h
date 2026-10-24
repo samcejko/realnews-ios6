@@ -12,6 +12,8 @@ BOOL RNModernIOS(void);
 // The first thing application:didFinishLaunchingWithOptions: does, before the window is made: the iOS 6 look of
 // the bars (UIAppearance; the bars of defaultBarStyle, black or default blue), bordered bar buttons, the iOS 6 blue
 // of switches, rounded grouped tables, full-screen modal presentation. Nothing happens on iOS 6.
+// Set before setup to match a custom-colored native iOS 6 navigation bar.
+void RNModernSetNavigationButtonTint(UIColor *normalTint, UIColor *doneTint);
 void RNModernSetUp(UIBarStyle defaultBarStyle);
 // The same without the bars' artwork, for an app that draws its bars itself (full-screen modals, rounded grouped
 // tables, full-width separators only).
