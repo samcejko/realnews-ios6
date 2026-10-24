@@ -169,6 +169,21 @@
     }
 }
 
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    // Grouped cells change width after creation; derive field widths from the
+    // final content bounds so the Find button stays on screen on iPad/iPhone.
+    NSArray *cells = @[_urlCell, _titleCell, _catCell];
+    NSArray *fields = @[_urlField, _titleField, _catField];
+    for (NSUInteger index = 0; index < cells.count; index++) {
+        UITableViewCell *cell = [cells objectAtIndex:index];
+        UITextField *field = [fields objectAtIndex:index];
+        field.frame = CGRectMake(16, (cell.contentView.bounds.size.height - 24) * .5f,
+                                 MAX(40, cell.contentView.bounds.size.width - 32), 24);
+    }
+}
+
 - (void)cancel
 {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
@@ -371,7 +386,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 0) return @"Feed Details";
+    if (section == 0) return L(@"FeedDetails");
     return @"Popular Feeds (Tap to use)";
 }
 

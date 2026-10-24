@@ -66,3 +66,5 @@
 "SearchArticles" = "Search articles...";
 "InvalidHTTPBody" = "The server sent an incomplete or invalid response.";
 "FaviconBackground" = "Gray icon background";
+"EditFeed" = "Edit feed";
+"FeedDetails" = "Feed details";
