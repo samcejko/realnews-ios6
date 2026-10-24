@@ -23,7 +23,9 @@ int main(void) {
         assert([b isEqualToString:[formatter stringFromDate:later]] && ![a isEqualToString:b]);
         assert([[RNUtils displayMetadataValue:@"not a date" forKey:@"pubDate"] isEqualToString:@"not a date"]);
         assert([[RNUtils displayMetadataValue:published forKey:@"description"] isEqualToString:published]);
-        assert([[RNUtils displayMetadataValue:@[published,updated] forKey:@"dc:date"] isEqualToString:[@[a,b] componentsJoinedByString:@", "]]);
+        NSArray *rawDates = @[published,updated];
+        NSString *joinedDates = [@[a,b] componentsJoinedByString:@", "];
+        assert([[RNUtils displayMetadataValue:rawDates forKey:@"dc:date"] isEqualToString:joinedDates]);
         RNFeed *legacy = [[RNFeed alloc] initWithDictionary:@{@"url":@"https://example.com/rss"}];
         assert(legacy.iconBackgroundEnabled);
         legacy.iconBackgroundEnabled = NO;
