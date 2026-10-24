@@ -1,4 +1,4 @@
-// RNModern.m - see RNModern.h. Shared by all of samcejko's iOS 6 apps (only the prefix differs).
+// RNModern.m - see RNModern.h. Based on the shared iOS 6 compatibility core, with the RealNews button palette extension.
 //
 // Compiled twice: with the iOS 9.3 SDK for the armv7 build (deployment target iOS 6.0) and with the iOS 16.5 SDK
 // for the arm64 build (deployment target iOS 14.0). APIs newer than a SDK are behind __IPHONE_OS_VERSION_MAX_ALLOWED,

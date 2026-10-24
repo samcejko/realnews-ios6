@@ -89,7 +89,6 @@
     UIBarButtonItem *saveBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                              target:self
                                                                              action:@selector(save)];
-    self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
     saveBtn.style = UIBarButtonItemStyleDone;
     self.navigationItem.rightBarButtonItem = saveBtn;
 

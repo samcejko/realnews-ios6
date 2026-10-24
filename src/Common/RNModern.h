@@ -3,7 +3,7 @@
 // draws the glossy iOS 6 bars that UIKit stopped drawing in iOS 7, presents modal screens full screen as iOS 6 did and
 // keeps dark mode off. Every function here is a no-op on iOS 6, where UIKit does all of this itself.
 //
-// Shared by all of samcejko's iOS 6 apps (only the prefix differs): change it in every copy or in none.
+// Based on the shared iOS 6 compatibility core; RealNews also supplies its orange/red button palette.
 #import <UIKit/UIKit.h>
 
 // YES on iOS 7 or newer.
