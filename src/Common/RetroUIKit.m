@@ -16,16 +16,21 @@ static UIImage *RetroGloss(UIColor *top, UIColor *bottom, CGFloat height) {
     CGRect rect = CGRectInset((CGRect){CGPointZero,size},.5,.5);
     UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:5];
     [path addClip]; RetroGradient(rect,top,bottom);
-    [[UIColor colorWithWhite:1 alpha:.25] setFill]; UIRectFill(CGRectMake(0,0,size.width,height*.46));
+    [[UIColor colorWithWhite:1 alpha:.25] setFill]; CGContextFillRect(UIGraphicsGetCurrentContext(),CGRectMake(0,0,size.width,height*.46));
     [[UIColor colorWithWhite:0 alpha:.55] setStroke]; path.lineWidth=1; [path stroke];
     UIImage *result=UIGraphicsGetImageFromCurrentImageContext(); UIGraphicsEndImageContext();
     return [result stretchableImageWithLeftCapWidth:12 topCapHeight:(NSInteger)(height*.5)];
+}
+void RetroStyleButton(UIButton *button) {
+    button.backgroundColor=[UIColor clearColor];
+    [button setBackgroundImage:RetroGloss([UIColor colorWithRed:.29 green:.56 blue:.88 alpha:1],[UIColor colorWithRed:.05 green:.27 blue:.58 alpha:1],26) forState:UIControlStateNormal];
+    button.titleLabel.shadowColor=[UIColor colorWithWhite:0 alpha:.55]; button.titleLabel.shadowOffset=CGSizeMake(0,-1);
 }
 UIColor *RetroGroupedBackground(void) {
     if (!RetroModern()) return [UIColor groupTableViewBackgroundColor];
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(6,6),YES,1);
     [[UIColor colorWithRed:197./255 green:204./255 blue:212./255 alpha:1] setFill]; UIRectFill(CGRectMake(0,0,6,6));
-    [[UIColor colorWithWhite:1 alpha:.13] setFill]; UIRectFill(CGRectMake(0,0,2,6));
+    [[UIColor colorWithRed:202./255 green:209./255 blue:217./255 alpha:1] setFill]; UIRectFill(CGRectMake(0,0,1,6));
     UIImage *image=UIGraphicsGetImageFromCurrentImageContext(); UIGraphicsEndImageContext();
     return [UIColor colorWithPatternImage:image];
 }

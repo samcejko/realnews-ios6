@@ -175,7 +175,7 @@ BOOL RNHandleDeviceCheckURL(NSURL *url, UIWindow *window, UINavigationController
                 [controls addObject:@{@"class":NSStringFromClass([view class]), @"label":view.accessibilityLabel ?: @"", @"x":@(CGRectGetMidX(rect)), @"y":@(CGRectGetMidY(rect))}];
             }
         }
-        RNCheckWrite(@{@"screen":NSStringFromClass([top class]), @"labels":labels, @"controls":controls}); return YES;
+        RNCheckWrite(@{@"screen":NSStringFromClass([top class]), @"labels":labels, @"controls":controls, @"modalStyle":@(top.navigationController.modalPresentationStyle), @"viewHeight":@(top.view.bounds.size.height)}); return YES;
     }
     return YES;
 }

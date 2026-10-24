@@ -112,6 +112,7 @@
     findBtn.titleLabel.font = [UIFont boldSystemFontOfSize:12.0f];
     findBtn.backgroundColor = [UIColor colorWithRed:0.25f green:0.55f blue:0.85f alpha:1.0f];
     findBtn.layer.cornerRadius = 4.0f;
+    RetroStyleButton(findBtn);
     [findBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [findBtn addTarget:self action:@selector(discoverFeedTapped) forControlEvents:UIControlEventTouchUpInside];
     _urlField.rightView = findBtn;

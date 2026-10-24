@@ -726,7 +726,7 @@ static BOOL ORIsAppController(UIViewController *vc)
 static void ORPresent(id self, SEL _cmd, UIViewController *vc, BOOL animated, void (^completion)(void))
 {
     // iOS 13 made the default a card that slides up and can be dragged away; iOS 6 presented full screen
-    if (vc && vc.modalPresentationStyle == UIModalPresentationAutomatic && ORIsAppController(vc)) {
+    if (vc && ORIsAppController(vc) && (vc.modalPresentationStyle == UIModalPresentationAutomatic || vc.modalPresentationStyle == UIModalPresentationPageSheet || (vc.modalPresentationStyle == UIModalPresentationFormSheet && UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPad))) {
         vc.modalPresentationStyle = UIModalPresentationFullScreen;
     }
     OROriginalPresent(self, _cmd, vc, animated, completion);
