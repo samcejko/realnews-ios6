@@ -57,14 +57,14 @@ UIView *RetroSectionHeader(NSString *title, CGFloat width) {
     for (UIView *view in self.subviews) if (view!=_skin) view.hidden=YES;
     _skin.frame=self.bounds;
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(79,27),NO,0);
-    UIBezierPath *track=[UIBezierPath bezierPathWithRoundedRect:CGRectMake(.5,.5,78,26) cornerRadius:4];[track addClip];
+    UIBezierPath *track=[UIBezierPath bezierPathWithRoundedRect:CGRectMake(.5,.5,78,26) cornerRadius:13];[track addClip];
     RetroGradient(CGRectMake(0,0,79,27),self.on?[UIColor colorWithRed:.02 green:.26 blue:.60 alpha:1]:[UIColor colorWithWhite:.56 alpha:1],self.on?[UIColor colorWithRed:.25 green:.64 blue:1 alpha:1]:[UIColor colorWithWhite:.94 alpha:1]);
     [[UIColor colorWithWhite:0 alpha:.4] setStroke];track.lineWidth=1;[track stroke];
     NSString *text=self.on?@"I":@"O";
     UIColor *foreground=self.on?[UIColor whiteColor]:[UIColor colorWithWhite:.45 alpha:1]; [foreground setFill];
-    [text drawInRect:CGRectMake(self.on?8:49,4,22,21) withFont:[UIFont boldSystemFontOfSize:17] lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
-    CGRect knob=CGRectMake(self.on?43:1,1,35,25);
-    CGContextSaveGState(UIGraphicsGetCurrentContext()); UIBezierPath *handle=[UIBezierPath bezierPathWithRoundedRect:knob cornerRadius:4];[handle addClip];
+    [text drawInRect:CGRectMake(self.on?14:45,4,22,21) withFont:[UIFont boldSystemFontOfSize:17] lineBreakMode:UILineBreakModeClip alignment:UITextAlignmentCenter];
+    CGRect knob=CGRectMake(self.on?53:1,1,25,25);
+    CGContextSaveGState(UIGraphicsGetCurrentContext()); UIBezierPath *handle=[UIBezierPath bezierPathWithRoundedRect:knob cornerRadius:12.5];[handle addClip];
     RetroGradient(knob,[UIColor whiteColor],[UIColor colorWithWhite:.78 alpha:1]);CGContextRestoreGState(UIGraphicsGetCurrentContext());
     [[UIColor colorWithWhite:.35 alpha:1] setStroke];handle.lineWidth=.6;[handle stroke];
     _skin.image=UIGraphicsGetImageFromCurrentImageContext();UIGraphicsEndImageContext();
