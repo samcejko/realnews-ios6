@@ -305,14 +305,14 @@
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
 {
     if (!error) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Uloženo"
+        UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:@"Uloženo"
                                                         message:@"Obrázek byl úspěšně uložen do složky Obrázky."
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
         [alert show];
     } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Chyba"
+        UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:@"Chyba"
                                                         message:error.localizedDescription
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
@@ -325,7 +325,7 @@
 {
     if (!_image) return;
     [UIPasteboard generalPasteboard].image = _image;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Zkopírováno"
+    UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:@"Zkopírováno"
                                                     message:@"Obrázek byl zkopírován do schránky."
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"

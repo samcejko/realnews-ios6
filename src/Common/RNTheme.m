@@ -1,4 +1,5 @@
 #import "RNTheme.h"
+#import "RNModern.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation RNTheme
@@ -46,7 +47,7 @@
 + (void)applyAppearance
 {
     UINavigationBar *navBar = [UINavigationBar appearance];
-    [navBar setTintColor:[self brandDarkOrangeColor]];
+    [navBar setTintColor:RNModernIOS() ? [UIColor whiteColor] : [self brandDarkOrangeColor]];
     
     // Preserve iOS 6 skeuomorphic gradient on iOS 7+
     UIImage *gradient44 = [self navbarGradientImageForHeight:44.0f];
@@ -55,17 +56,11 @@
     [navBar setBackgroundImage:gradient32 forBarMetrics:UIBarMetricsLandscapePhone];
     
     UIToolbar *toolbar = [UIToolbar appearance];
-    [toolbar setTintColor:[self brandDarkOrangeColor]];
+    [toolbar setTintColor:RNModernIOS() ? [UIColor whiteColor] : [self brandDarkOrangeColor]];
     
-    // iOS 5-6: UIToolbarPositionBottom; iOS 7+: UIBarPositionAny
-    // Use performSelector to avoid -Wunguarded-availability errors
-    SEL modernSel = @selector(setBackgroundImage:forBarPosition:barMetrics:);
-    SEL legacySel = @selector(setBackgroundImage:forToolbarPosition:barMetrics:);
-    if ([toolbar respondsToSelector:modernSel]) {
-        [toolbar performSelector:modernSel withObject:gradient44 withObject:@(UIBarPositionAny)];
-    } else if ([toolbar respondsToSelector:legacySel]) {
-        [toolbar performSelector:legacySel withObject:gradient44 withObject:@(UIToolbarPositionBottom)];
-    }
+    [toolbar setBackgroundImage:gradient44 forToolbarPosition:UIToolbarPositionBottom barMetrics:UIBarMetricsDefault];
+    RNModernApplyNavigationBarBackground(navBar, gradient44, nil, nil, nil, nil);
+    RNModernApplyToolbarBackground(toolbar, gradient44);
 }
 
 + (UIImage *)navbarGradientImageForHeight:(CGFloat)height

@@ -5,6 +5,7 @@
 #import "RNArticleViewController.h"
 #import "RNAppearanceViewController.h"
 #import "RNTheme.h"
+#import "RNModern.h"
 #import "RNTLSSocket.h"
 #import "RNFeedStore.h"
 #import "RNImageLoader.h"
@@ -20,6 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    RNModernSetUp(UIBarStyleDefault);
     [RNTheme applyAppearance];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

@@ -1,6 +1,7 @@
 // RNCommon.h - Shared macros, constants and notifications for RealNews iOS 6.
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "RetroUIKit.h"
 
 #pragma clang diagnostic error "-Wunguarded-availability"
 

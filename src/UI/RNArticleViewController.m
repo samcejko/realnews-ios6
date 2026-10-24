@@ -335,7 +335,7 @@
 
     // Fetch full text
     if (!_item.link.length) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Chyba"
+        UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:@"Chyba"
                                                         message:@"Tento článek neobsahuje odkaz na webovou stránku."
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
@@ -364,7 +364,7 @@
                 [strongSelf loadArticleContent];
             } else {
                 [strongSelf updateBarButtons];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Chyba extrakce"
+                UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:@"Chyba extrakce"
                                                                 message:@"Nepodařilo se extrahovat celý článek z webové stránky."
                                                                delegate:nil
                                                       cancelButtonTitle:@"OK"
@@ -593,7 +593,7 @@
 - (void)showActionSheet
 {
     if (!_item) return;
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil
+    UIActionSheet *sheet = [[RetroActionSheet alloc] initWithTitle:nil
                                                        delegate:self
                                               cancelButtonTitle:L(@"Cancel")
                                           destructiveButtonTitle:nil

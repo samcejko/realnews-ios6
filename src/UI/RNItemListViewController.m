@@ -156,7 +156,7 @@
 - (void)showErrorDetails
 {
     if (!_feed.lastError.length) return;
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Feed Sync Error"
+    UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:@"Feed Sync Error"
                                                     message:[NSString stringWithFormat:@"URL:\n%@\n\nDiagnostic Error:\n%@", _feed.url, _feed.lastError]
                                                    delegate:self
                                           cancelButtonTitle:@"Dismiss"

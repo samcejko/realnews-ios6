@@ -129,7 +129,7 @@ static NSString *const kRNFontSizeKey = @"rn_font_size";
     _tableView.dataSource = self;
     _tableView.delegate = self;
     _tableView.backgroundView = nil;
-    _tableView.backgroundColor = [UIColor colorWithRed:0.92f green:0.92f blue:0.94f alpha:1.0f];
+    _tableView.backgroundColor = RetroGroupedBackground();
     [self.view addSubview:_tableView];
 }
 
@@ -151,6 +151,15 @@ static NSString *const kRNFontSizeKey = @"rn_font_size";
     if (section == 1) return 1; // Font size stepper
     if (section == 2) return _fontNames.count; // Font families
     return 0;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return RetroSectionHeader([self tableView:tableView titleForHeaderInSection:section], tableView.bounds.size.width);
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return [self tableView:tableView titleForHeaderInSection:section].length ? 32.0 : 10.0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

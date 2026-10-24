@@ -393,7 +393,7 @@
             if (feed.lastError.length) {
                 [tableView deselectRowAtIndexPath:indexPath animated:YES];
                 NSString *firstBtn = (feed.items.count > 0) ? @"Open Articles" : L(@"Done");
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:feed.title.length ? feed.title : @"Feed Error"
+                UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:feed.title.length ? feed.title : @"Feed Error"
                                                                 message:feed.lastError
                                                                delegate:self
                                                       cancelButtonTitle:firstBtn

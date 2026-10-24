@@ -1,6 +1,8 @@
 // Device-only feedback regression bridge. Disabled unless Documents/feedback-checks exists.
 #import "RNDeviceChecks.h"
 #import "RNUtils.h"
+#import "RNSettingsViewController.h"
+#import "RetroUIKit.h"
 #import "RNHTTPRequest.h"
 #import "RNFeedStore.h"
 #import "RNMetadataViewController.h"
@@ -100,6 +102,27 @@ BOOL RNHandleDeviceCheckURL(NSURL *url, UIWindow *window, UINavigationController
     }
     NSString *command = [params objectForKey:@"command"];
     if ([command isEqualToString:@"back"]) { [navigation dismissViewControllerAnimated:NO completion:nil]; return YES; }
+    if ([command isEqualToString:@"settings"]) {
+        [navigation presentViewController:[[UINavigationController alloc] initWithRootViewController:[[RNSettingsViewController alloc] init]] animated:NO completion:nil];return YES;
+    }
+    if ([command isEqualToString:@"alert"]) {
+        [[[RetroAlertView alloc] initWithTitle:@"RealNews" message:@"iOS 6 dialog" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];return YES;
+    }
+    if ([command isEqualToString:@"sheet"]) {
+        [[[RetroActionSheet alloc] initWithTitle:@"RealNews" delegate:nil cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Copy link",@"Open in Safari",nil] showInView:window];return YES;
+    }
+    if ([command isEqualToString:@"activate"]) {
+        NSMutableArray *views=[NSMutableArray array]; RNCheckViews(window,views);
+        NSUInteger index=[[params objectForKey:@"index"] integerValue], found=0;
+        for (UIView *view in views) if ([view isKindOfClass:[UIControl class]]) {
+            if (found++ == index) {
+                if ([view isKindOfClass:[UISwitch class]]) { UISwitch *toggle=(UISwitch *)view; [toggle setOn:!toggle.on animated:NO];[toggle sendActionsForControlEvents:UIControlEventValueChanged]; }
+                else [(UIControl *)view sendActionsForControlEvents:UIControlEventTouchUpInside];
+                break;
+            }
+        }
+        return YES;
+    }
     if ([command isEqualToString:@"image"]) {
         [navigation presentViewController:[[RNImageViewerViewController alloc] initWithImage:[UIImage imageNamed:@"Icon-72.png"]] animated:NO completion:nil];
         return YES;

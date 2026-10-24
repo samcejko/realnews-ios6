@@ -44,7 +44,7 @@
 {
     [super viewDidLoad];
     self.title = L(@"Settings");
-    self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.tableView.backgroundColor = RetroGroupedBackground();
 
     UIBarButtonItem *doneBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                              target:self
@@ -77,6 +77,15 @@
     if (section == 1) return 2; // Retention days, Max items
     if (section == 2) return 1; // Network Timeout
     return 2; // About, Repo
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return RetroSectionHeader([self tableView:tableView titleForHeaderInSection:section], tableView.bounds.size.width);
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return [self tableView:tableView titleForHeaderInSection:section].length ? 32.0 : 10.0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -154,7 +163,7 @@
         [[RNFeedStore sharedStore] clearAllCache];
         _cacheSize = 0;
         [self.tableView reloadData];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:L(@"ClearCache")
+        UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:L(@"ClearCache")
                                                         message:L(@"CacheCleared")
                                                        delegate:nil
                                               cancelButtonTitle:L(@"Done")
@@ -163,7 +172,7 @@
     } else if (indexPath.section == 1) {
         if (indexPath.row == 0) {
             // Retention Sheet
-            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:L(@"KeepArticles")
+            UIActionSheet *as = [[RetroActionSheet alloc] initWithTitle:L(@"KeepArticles")
                                                             delegate:self
                                                    cancelButtonTitle:L(@"Cancel")
                                               destructiveButtonTitle:nil
@@ -177,7 +186,7 @@
             }
         } else {
             // Max items sheet
-            UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:L(@"MaxItemsPerFeed")
+            UIActionSheet *as = [[RetroActionSheet alloc] initWithTitle:L(@"MaxItemsPerFeed")
                                                             delegate:self
                                                    cancelButtonTitle:L(@"Cancel")
                                               destructiveButtonTitle:nil
@@ -192,7 +201,7 @@
         }
     } else if (indexPath.section == 2) {
         // Network Timeout sheet
-        UIActionSheet *as = [[UIActionSheet alloc] initWithTitle:@"Network Timeout"
+        UIActionSheet *as = [[RetroActionSheet alloc] initWithTitle:@"Network Timeout"
                                                         delegate:self
                                                cancelButtonTitle:L(@"Cancel")
                                           destructiveButtonTitle:nil

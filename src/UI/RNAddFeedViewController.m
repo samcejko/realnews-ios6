@@ -79,7 +79,7 @@
 {
     [super viewDidLoad];
     self.title = _feedToEdit ? (L(@"EditFeed") ?: @"Edit Feed") : L(@"AddFeed");
-    self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.tableView.backgroundColor = RetroGroupedBackground();
 
     UIBarButtonItem *cancelBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                                                                target:self
@@ -144,7 +144,7 @@
     _iconBackgroundCell.selectionStyle = UITableViewCellSelectionStyleNone;
     _iconBackgroundCell.textLabel.text = L(@"FaviconBackground");
     _iconBackgroundCell.textLabel.font = [UIFont systemFontOfSize:16.0f];
-    _iconBackgroundSwitch = [[UISwitch alloc] init];
+    _iconBackgroundSwitch = RetroMakeSwitch();
     _iconBackgroundSwitch.on = _feedToEdit ? _feedToEdit.iconBackgroundEnabled : YES;
     _iconBackgroundSwitch.accessibilityLabel = L(@"FaviconBackground");
     _iconBackgroundCell.accessoryView = _iconBackgroundSwitch;
@@ -215,7 +215,7 @@
                 if (!self->_titleField.text.length && f.title.length) {
                     self->_titleField.text = f.title;
                 }
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:L(@"FeedFound")
+                UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:L(@"FeedFound")
                                                                 message:[NSString stringWithFormat:@"%@\n(%@)", f.title, f.url]
                                                                delegate:nil
                                                       cancelButtonTitle:@"OK"
@@ -223,7 +223,7 @@
                 [alert show];
             } else if (feeds.count > 1) {
                 self->_lastDiscovered = feeds;
-                UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:L(@"ChooseFeed")
+                UIActionSheet *sheet = [[RetroActionSheet alloc] initWithTitle:L(@"ChooseFeed")
                                                                    delegate:self
                                                           cancelButtonTitle:nil
                                                      destructiveButtonTitle:nil
@@ -235,7 +235,7 @@
                 sheet.cancelButtonIndex = feeds.count;
                 [sheet showInView:self.view];
             } else {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:L(@"NoFeedFound")
+                UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:L(@"NoFeedFound")
                                                                 message:L(@"NoFeedFoundMessage")
                                                                delegate:nil
                                                       cancelButtonTitle:@"OK"
@@ -264,7 +264,7 @@
     NSString *cat = [_catField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
     if (!url.length) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:L(@"Error")
+        UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:L(@"Error")
                                                         message:L(@"EnterFeedURL")
                                                        delegate:nil
                                               cancelButtonTitle:L(@"Done")
@@ -363,7 +363,7 @@
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                            target:self
                                                                                            action:@selector(save)];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:L(@"FeedError")
+    UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:L(@"FeedError")
                                                     message:error.localizedDescription
                                                    delegate:nil
                                           cancelButtonTitle:L(@"Done")
@@ -382,6 +382,15 @@
 {
     if (section == 0) return 4;
     return _presets.count;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return RetroSectionHeader([self tableView:tableView titleForHeaderInSection:section], tableView.bounds.size.width);
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return [self tableView:tableView titleForHeaderInSection:section].length ? 32.0 : 10.0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

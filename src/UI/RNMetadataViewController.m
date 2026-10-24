@@ -76,7 +76,7 @@
     [super viewDidLoad];
     self.title = L(@"AllFields");
     self.tableView.backgroundView = nil;
-    self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.tableView.backgroundColor = RetroGroupedBackground();
 
     UIBarButtonItem *doneBtn = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                              target:self
@@ -99,6 +99,15 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return 1;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    return RetroSectionHeader([self tableView:tableView titleForHeaderInSection:section], tableView.bounds.size.width);
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return [self tableView:tableView titleForHeaderInSection:section].length ? 32.0 : 10.0;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -152,7 +161,7 @@
     } else {
         // Copy to clipboard
         [[UIPasteboard generalPasteboard] setString:val];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:key
+        UIAlertView *alert = [[RetroAlertView alloc] initWithTitle:key
                                                         message:[NSString stringWithFormat:@"Copied to clipboard:\n%@", val]
                                                        delegate:nil
                                               cancelButtonTitle:L(@"Done")
