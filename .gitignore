@@ -8,4 +8,11 @@ build/
 local.json
 vendor/mbedtls/
 vendor/libwebp/
+__pycache__/
+*.pyc
+*.log
+tools/local.json
+feeds_*.json
+feeds.json
+*_test.json
 

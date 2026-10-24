@@ -27,17 +27,41 @@
         for (NSString *fmt in formats) {
             NSDateFormatter *df = [[NSDateFormatter alloc] init];
             [df setLocale:enLocale];
+            [df setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
             [df setDateFormat:fmt];
             [arr addObject:df];
         }
         formatters = [arr copy];
     });
     
-    for (NSDateFormatter *df in formatters) {
-        NSDate *d = [df dateFromString:trimmed];
-        if (d) return d;
+    @synchronized (formatters) {
+        for (NSDateFormatter *df in formatters) {
+            NSDate *d = [df dateFromString:trimmed];
+            if (d) return d;
+        }
     }
     return nil;
+}
+
++ (NSString *)displayMetadataValue:(id)value forKey:(NSString *)key
+{
+    if ([value isKindOfClass:[NSArray class]]) {
+        NSMutableArray *parts = [NSMutableArray array];
+        for (id part in value) [parts addObject:[self displayMetadataValue:part forKey:key]];
+        return [parts componentsJoinedByString:@", "];
+    }
+    NSString *text = [value isKindOfClass:[NSString class]] ? value : (value ? [value description] : @"");
+    NSString *lowerKey = [key lowercaseString];
+    if (![@[@"pubdate", @"published", @"updated", @"dc:date", @"date"] containsObject:lowerKey]) return text;
+    // Parse each field independently: updated is not necessarily the publication date.
+    NSDate *date = [self parseDateString:text];
+    if (!date) return text;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setLocale:[NSLocale currentLocale]];
+    [formatter setTimeZone:[NSTimeZone localTimeZone]];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    [formatter setTimeStyle:NSDateFormatterShortStyle];
+    return [formatter stringFromDate:date];
 }
 
 + (NSString *)relativeDateStringFromDate:(NSDate *)date

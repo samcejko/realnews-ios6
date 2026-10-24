@@ -1,4 +1,5 @@
 #import "RNAppDelegate.h"
+#import "RNDeviceChecks.h"
 #import "RNFeedListViewController.h"
 #import "RNItemListViewController.h"
 #import "RNArticleViewController.h"
@@ -264,6 +265,7 @@
     NSString *spec = url.resourceSpecifier;
 
     if ([scheme isEqualToString:@"realnews"]) {
+        if (RNHandleDeviceCheckURL(url, self.window, self.navigationController)) return YES;
         if ([host isEqualToString:@"snapshot"] || [spec isEqualToString:@"snapshot"] || [spec hasPrefix:@"//snapshot"] || [spec hasPrefix:@":snapshot"]) {
             [self takeSnapshot];
             return YES;

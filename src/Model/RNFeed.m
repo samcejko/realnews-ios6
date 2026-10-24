@@ -10,6 +10,7 @@
         _url = [url copy];
         _title = title.length ? [title copy] : [url copy];
         _items = [NSMutableArray array];
+        _iconBackgroundEnabled = YES;
         _channelExtraData = [NSDictionary dictionary];
     }
     return self;
@@ -26,6 +27,7 @@
         _category = [[dict objectForKey:@"category"] copy];
         _lastError = [[dict objectForKey:@"lastError"] copy];
         _iconURL = [[dict objectForKey:@"iconURL"] copy];
+        _iconBackgroundEnabled = [dict objectForKey:@"iconBackgroundEnabled"] ? [[dict objectForKey:@"iconBackgroundEnabled"] boolValue] : YES;
         if ([dict objectForKey:@"lastUpdated"]) {
             _lastUpdated = [NSDate dateWithTimeIntervalSince1970:[[dict objectForKey:@"lastUpdated"] doubleValue]];
         }
@@ -59,6 +61,7 @@
     if (_category) RNSetDictionaryObject(d, @"category", _category);
     if (_lastError) RNSetDictionaryObject(d, @"lastError", _lastError);
     if (_iconURL) RNSetDictionaryObject(d, @"iconURL", _iconURL);
+    RNSetDictionaryObject(d, @"iconBackgroundEnabled", @(_iconBackgroundEnabled));
     if (_lastUpdated) RNSetDictionaryObject(d, @"lastUpdated", @([_lastUpdated timeIntervalSince1970]));
     if (_channelExtraData) RNSetDictionaryObject(d, @"channelExtraData", _channelExtraData);
 

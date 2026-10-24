@@ -1,6 +1,7 @@
 #import "RNMetadataViewController.h"
 #import "RNCommon.h"
 #import "RNTheme.h"
+#import "RNUtils.h"
 
 @interface RNMetadataViewController () {
     RNFeedItem *_item;
@@ -23,7 +24,7 @@
         if (item.title.length) [self addKey:@"title" value:item.title];
         if (item.link.length) [self addKey:@"link" value:item.link];
         if (item.author.length) [self addKey:@"author" value:item.author];
-        if (item.publishDateString.length) [self addKey:@"pubDate" value:item.publishDateString];
+        if (item.publishDateString.length) [self addKey:@"pubDate" value:[RNUtils displayMetadataValue:item.publishDateString forKey:@"pubDate"]];
         if (item.identifier.length) [self addKey:@"guid / id" value:item.identifier];
         if (item.enclosureURL.length) {
             [self addKey:@"enclosure" value:[NSString stringWithFormat:@"%@ (%@)", item.enclosureURL, item.enclosureType ?: @"file"]];
@@ -34,11 +35,7 @@
         for (NSString *k in sortedExtraKeys) {
             if ([k.lowercaseString isEqualToString:@"title"] || [k.lowercaseString isEqualToString:@"link"]) continue;
             id val = [_item.extraData objectForKey:k];
-            if ([val isKindOfClass:[NSArray class]]) {
-                [self addKey:k value:[(NSArray *)val componentsJoinedByString:@", "]];
-            } else {
-                [self addKey:k value:[NSString stringWithFormat:@"%@", val]];
-            }
+            [self addKey:k value:[RNUtils displayMetadataValue:val forKey:k]];
         }
     }
     return self;

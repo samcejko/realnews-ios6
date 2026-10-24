@@ -65,3 +65,4 @@
 "NotAFeed" = "This address does not contain an RSS or Atom feed.";
 "SearchArticles" = "Search articles...";
 "InvalidHTTPBody" = "The server sent an incomplete or invalid response.";
+"FaviconBackground" = "Gray icon background";

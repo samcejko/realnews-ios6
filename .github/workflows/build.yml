@@ -22,7 +22,16 @@ env:
   THEOS_CACHE_KEY: theos-linux-clang11-sdk93-sdk165-v2
 
 jobs:
+  feedback-test:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify feedback date conversion and favicon persistence
+        run: |
+          clang -fobjc-arc -g -fsanitize=address,undefined -framework Foundation -Isrc/Common -Isrc/Model tools/check_feedback.m src/Common/RNUtils.m src/Model/RNFeed.m src/Model/RNFeedItem.m -o /tmp/check-feedback
+          /tmp/check-feedback
   build:
+    needs: feedback-test
     strategy:
       fail-fast: false
       matrix:

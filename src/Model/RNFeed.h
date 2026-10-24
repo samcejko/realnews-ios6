@@ -11,6 +11,7 @@
 @property (nonatomic, strong) NSDate *lastUpdated;
 @property (nonatomic, copy) NSString *lastError;
 @property (nonatomic, copy) NSString *iconURL;
+@property (nonatomic) BOOL iconBackgroundEnabled;
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, strong) NSDictionary *channelExtraData;
 

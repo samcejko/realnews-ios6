@@ -138,16 +138,18 @@
     return s_def;
 }
 
-- (UIImage *)scaledIconImage:(UIImage *)image toSize:(CGSize)size
+- (UIImage *)scaledIconImage:(UIImage *)image toSize:(CGSize)size background:(BOOL)background
 {
     if (!image) return nil;
     UIGraphicsBeginImageContextWithOptions(size, NO, 0.0f);
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     
     // Subtle gray background so white favicons don't disappear on light backgrounds
-    CGContextSetFillColorWithColor(ctx, [UIColor colorWithWhite:0.9 alpha:1.0].CGColor);
-    UIBezierPath *bgPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height) cornerRadius:4.0f];
-    [bgPath fill];
+    if (background) {
+        CGContextSetFillColorWithColor(ctx, [UIColor colorWithWhite:0.75 alpha:1.0].CGColor);
+        UIBezierPath *bgPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height) cornerRadius:4.0f];
+        [bgPath fill];
+    }
     
     UIBezierPath *clipPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0, 0, size.width, size.height) cornerRadius:4.0f];
     [clipPath addClip];
@@ -169,7 +171,7 @@
             if ([[f effectiveIconURL] isEqualToString:url]) {
                 UIImage *img = [[RNImageLoader shared] imageForURL:url];
                 if (img) {
-                    cell.imageView.image = [self scaledIconImage:img toSize:CGSizeMake(24.0f, 24.0f)];
+                    cell.imageView.image = [self scaledIconImage:img toSize:CGSizeMake(24.0f, 24.0f) background:f.iconBackgroundEnabled];
                     [cell setNeedsLayout];
                 }
             }
@@ -311,7 +313,7 @@
     if (iconURL.length > 0) {
         UIImage *img = [[RNImageLoader shared] imageForURL:iconURL];
         if (img) {
-            cell.imageView.image = [self scaledIconImage:img toSize:CGSizeMake(24.0f, 24.0f)];
+            cell.imageView.image = [self scaledIconImage:img toSize:CGSizeMake(24.0f, 24.0f) background:feed.iconBackgroundEnabled];
         } else {
             cell.imageView.image = [self defaultFeedIcon];
         }

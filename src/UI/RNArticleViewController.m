@@ -515,19 +515,7 @@
         for (NSString *k in keys) {
             if ([k.lowercaseString isEqualToString:@"title"] || [k.lowercaseString isEqualToString:@"link"]) continue;
             id val = [_item.extraData objectForKey:k];
-            NSString *valStr = [val isKindOfClass:[NSArray class]] ? [(NSArray *)val componentsJoinedByString:@", "] : [NSString stringWithFormat:@"%@", val];
-
-            // Format known date fields in device timezone instead of showing raw string
-            NSString *lowerKey = k.lowercaseString;
-            BOOL isDateField = [lowerKey isEqualToString:@"pubdate"] || [lowerKey isEqualToString:@"published"] ||
-                               [lowerKey isEqualToString:@"updated"] || [lowerKey isEqualToString:@"dc:date"];
-            if (isDateField && _item.publishDate) {
-                NSDateFormatter *df = [[NSDateFormatter alloc] init];
-                [df setDateStyle:NSDateFormatterMediumStyle];
-                [df setTimeStyle:NSDateFormatterShortStyle];
-                [df setLocale:[NSLocale currentLocale]];
-                valStr = [df stringFromDate:_item.publishDate];
-            }
+            NSString *valStr = [RNUtils displayMetadataValue:val forKey:k];
 
             [extraHTML appendString:@"<tr>"];
             [extraHTML appendFormat:@"<td class='key'>%@</td>", k];

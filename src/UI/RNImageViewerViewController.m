@@ -2,7 +2,7 @@
 #import "RNImageLoader.h"
 #import "RNCommon.h"
 
-@interface RNImageViewerViewController () {
+@interface RNImageViewerViewController () <UIGestureRecognizerDelegate> {
     UIScrollView *_scrollView;
     UIImageView *_imageView;
     UIToolbar *_topToolbar;
@@ -58,12 +58,14 @@
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     singleTap.numberOfTapsRequired = 1;
     singleTap.cancelsTouchesInView = NO;
-    singleTap.delaysTouchesBegan = YES;
+    singleTap.delaysTouchesBegan = NO;
+    singleTap.delegate = self;
     [self.view addGestureRecognizer:singleTap];
 
     // Double tap to zoom
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
+    doubleTap.delegate = self;
     [singleTap requireGestureRecognizerToFail:doubleTap];
     [self.view addGestureRecognizer:doubleTap];
 
@@ -250,6 +252,16 @@
 }
 
 #pragma mark - Gestures & Actions
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    // Toolbar buttons must receive their complete touch sequence, without the
+    // image's single/double-tap recognizers delaying or cancelling it.
+    for (UIView *view = touch.view; view; view = view.superview) {
+        if ([view isKindOfClass:[UIControl class]] || [view isKindOfClass:[UIToolbar class]]) return NO;
+    }
+    return YES;
+}
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)tap
 {

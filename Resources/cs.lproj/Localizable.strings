@@ -65,3 +65,4 @@
 "NotAFeed" = "Tato adresa neobsahuje RSS ani Atom kanál.";
 "SearchArticles" = "Hledat články...";
 "InvalidHTTPBody" = "Server odeslal neúplnou nebo neplatnou odpověď.";
+"FaviconBackground" = "Šedé pozadí ikony";

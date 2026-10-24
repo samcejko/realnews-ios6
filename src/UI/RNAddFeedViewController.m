@@ -14,6 +14,8 @@
     UITableViewCell *_urlCell;
     UITableViewCell *_titleCell;
     UITableViewCell *_catCell;
+    UITableViewCell *_iconBackgroundCell;
+    UISwitch *_iconBackgroundSwitch;
     UIActivityIndicatorView *_spinner;
     NSArray *_presets;
     NSArray *_lastDiscovered;
@@ -138,6 +140,15 @@
     [_catField addTarget:self action:@selector(fieldChanged:) forControlEvents:UIControlEventEditingChanged];
     [_catCell.contentView addSubview:_catField];
 
+    _iconBackgroundCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    _iconBackgroundCell.selectionStyle = UITableViewCellSelectionStyleNone;
+    _iconBackgroundCell.textLabel.text = L(@"FaviconBackground");
+    _iconBackgroundCell.textLabel.font = [UIFont systemFontOfSize:16.0f];
+    _iconBackgroundSwitch = [[UISwitch alloc] init];
+    _iconBackgroundSwitch.on = _feedToEdit ? _feedToEdit.iconBackgroundEnabled : YES;
+    _iconBackgroundSwitch.accessibilityLabel = L(@"FaviconBackground");
+    _iconBackgroundCell.accessoryView = _iconBackgroundSwitch;
+
     if (_feedToEdit) {
         _urlField.text = _enteredURL;
         _titleField.text = _enteredTitle;
@@ -256,6 +267,7 @@
         _feedToEdit.url = url;
         _feedToEdit.title = title.length ? title : url;
         _feedToEdit.category = cat;
+        _feedToEdit.iconBackgroundEnabled = _iconBackgroundSwitch.on;
         [[RNFeedStore sharedStore] save];
         [[RNFeedStore sharedStore] refreshFeed:_feedToEdit completion:nil];
         if ([self.delegate respondsToSelector:@selector(addFeedDidFinishWithSuccess:)]) {
@@ -274,6 +286,8 @@
             NSString *httpUrl = [NSString stringWithFormat:@"http://%@", [url substringFromIndex:8]];
             [[RNFeedStore sharedStore] addFeedWithURL:httpUrl title:title category:cat completion:^(RNFeed *httpFeed, NSError *httpError) {
                 if (httpFeed) {
+                    httpFeed.iconBackgroundEnabled = self->_iconBackgroundSwitch.on;
+                    [[RNFeedStore sharedStore] save];
                     [self->_spinner stopAnimating];
                     if ([self.delegate respondsToSelector:@selector(addFeedDidFinishWithSuccess:)]) {
                         [self.delegate addFeedDidFinishWithSuccess:YES];
@@ -290,6 +304,8 @@
 
     [[RNFeedStore sharedStore] addFeedWithURL:url title:title category:cat completion:^(RNFeed *feed, NSError *error) {
         if (feed) {
+            feed.iconBackgroundEnabled = self->_iconBackgroundSwitch.on;
+            [[RNFeedStore sharedStore] save];
             [self->_spinner stopAnimating];
             if ([self.delegate respondsToSelector:@selector(addFeedDidFinishWithSuccess:)]) {
                 [self.delegate addFeedDidFinishWithSuccess:YES];
@@ -306,6 +322,8 @@
 
                         [[RNFeedStore sharedStore] addFeedWithURL:first.url title:first.title category:cat completion:^(RNFeed *discoveredFeed, NSError *finalError) {
                             if (discoveredFeed) {
+                                discoveredFeed.iconBackgroundEnabled = self->_iconBackgroundSwitch.on;
+                                [[RNFeedStore sharedStore] save];
                                 [self->_spinner stopAnimating];
                                 if ([self.delegate respondsToSelector:@selector(addFeedDidFinishWithSuccess:)]) {
                                     [self.delegate addFeedDidFinishWithSuccess:YES];
@@ -347,7 +365,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) return 3;
+    if (section == 0) return 4;
     return _presets.count;
 }
 
@@ -368,6 +386,7 @@
             if (_enteredTitle) _titleField.text = _enteredTitle;
             return _titleCell;
         }
+        if (indexPath.row == 3) return _iconBackgroundCell;
         if (_enteredCategory) _catField.text = _enteredCategory;
         return _catCell;
     }

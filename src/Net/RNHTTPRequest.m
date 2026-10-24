@@ -7,6 +7,7 @@
     RNTLSSocket *_socket;
     BOOL _isCancelled;
     BOOL _isFinished;
+    BOOL _timedOut;
     NSInteger _redirectCount;
 }
 @end
@@ -27,6 +28,23 @@
 - (void)start
 {
     _redirectCount = 0;
+    // One deadline covers DNS, redirects, TLS and a server that sends bytes
+    // slowly enough to keep resetting an individual socket-read timeout.
+    NSTimeInterval limit = self.readTimeout > 0 ? self.readTimeout : 60.0;
+    __weak RNHTTPRequest *weakSelf = self;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(limit * NSEC_PER_SEC)),
+                   dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RNHTTPRequest *request = weakSelf;
+        if (!request) return;
+        RNTLSSocket *socket = nil;
+        @synchronized (request) {
+            if (request->_isFinished || request->_isCancelled) return;
+            request->_timedOut = YES;
+            socket = request->_socket;
+        }
+        [socket cancel];
+        [request finishWithStatus:0 body:nil error:RNMakeError(RNErrorTimeout, @"Request timed out")];
+    });
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self executeRequestForURL:self.urlString];
     });
@@ -43,14 +61,22 @@
 
 - (void)finishWithStatus:(NSInteger)status body:(NSData *)body error:(NSError *)error
 {
+    RNTLSSocket *socket = nil;
+    BOOL timedOut = NO;
     @synchronized (self) {
         if (_isFinished) return;
         _isFinished = YES;
-    }
-    if (_socket) {
-        [_socket close];
+        timedOut = _timedOut;
+        socket = _socket;
         _socket = nil;
+        if (_timedOut) {
+            status = 0; body = nil;
+            error = RNMakeError(RNErrorTimeout, @"Request timed out");
+        }
     }
+    // Timeout cancellation only signals the socket. The worker still owns it
+    // and must leave any TLS call before deallocation frees its TLS state.
+    if (!timedOut) [socket close];
     _statusCode = status;
     RNMain(^{
         if (self.onComplete) {
@@ -61,7 +87,7 @@
 
 - (void)executeRequestForURL:(NSString *)currentURLString
 {
-    if (_isCancelled) {
+    if (_isCancelled || self.isFinished) {
         [self finishWithStatus:0 body:nil error:RNMakeError(RNErrorCancelled, @"Request cancelled")];
         return;
     }
@@ -89,7 +115,7 @@
     RNTLSSocket *sock = [[RNTLSSocket alloc] init];
     sock.plain = !isHTTPS;
     @synchronized (self) {
-        if (_isCancelled) return;
+        if (_isCancelled || _isFinished) return;
         _socket = sock;
     }
 
