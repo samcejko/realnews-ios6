@@ -112,16 +112,15 @@ BOOL RNHandleDeviceCheckURL(NSURL *url, UIWindow *window, UINavigationController
         [[[RetroActionSheet alloc] initWithTitle:@"RealNews" delegate:nil cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Copy link",@"Open in Safari",nil] showInView:window];return YES;
     }
     if ([command isEqualToString:@"activate"]) {
-        NSMutableArray *views=[NSMutableArray array]; RNCheckViews(window,views);
-        NSUInteger index=[[params objectForKey:@"index"] integerValue], found=0;
-        for (UIView *view in views) if ([view isKindOfClass:[UIControl class]]) {
-            if (found++ == index) {
-                if ([view isKindOfClass:[UISwitch class]]) { UISwitch *toggle=(UISwitch *)view; [toggle setOn:!toggle.on animated:NO];[toggle sendActionsForControlEvents:UIControlEventValueChanged]; }
-                else [(UIControl *)view sendActionsForControlEvents:UIControlEventTouchUpInside];
-                break;
-            }
-        }
-        return YES;
+        // Invoke the control hit at a rendered point. This tests actions, not a synthetic physical tap.
+        UIView *view=[window hitTest:CGPointMake([[params objectForKey:@"x"] doubleValue], [[params objectForKey:@"y"] doubleValue]) withEvent:nil];
+        while (view && ![view isKindOfClass:[UIControl class]]) view=view.superview;
+        if ([view isKindOfClass:[UISwitch class]]) {
+            UISwitch *toggle=(UISwitch *)view;
+            if ([NSStringFromClass([toggle class]) isEqualToString:@"RetroSwitch"]) [toggle accessibilityActivate];
+            else { [toggle setOn:!toggle.on animated:NO];[toggle sendActionsForControlEvents:UIControlEventValueChanged]; }
+        } else if (view) [(UIControl *)view sendActionsForControlEvents:UIControlEventTouchUpInside];
+        RNCheckWrite(@{@"activatedClass":view ? NSStringFromClass([view class]) : @"none"});return YES;
     }
     if ([command isEqualToString:@"image"]) {
         [navigation presentViewController:[[RNImageViewerViewController alloc] initWithImage:[UIImage imageNamed:@"Icon-72.png"]] animated:NO completion:nil];
