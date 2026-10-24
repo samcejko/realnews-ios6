@@ -115,13 +115,16 @@ static UIView *RetroOverlay(void) {
     if (!RetroModern()) { [super show];return; }
     if (_retroOverlay) return;RetroHold(self);_retroOverlay=RetroOverlay();
     CGFloat width=MIN(320,_retroOverlay.bounds.size.width-40);
-    CGFloat messageHeight=MIN(180,[self.message sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(width-28,CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height+12);
+    CGFloat textHeight=[self.message sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(width-28,CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap].height+12;
+    CGFloat messageHeight=MIN(180,textHeight);
     CGFloat height=58+messageHeight+MAX(1,self.numberOfButtons)*48;
     UIView *panel=[[UIView alloc] initWithFrame:CGRectMake((_retroOverlay.bounds.size.width-width)*.5,(_retroOverlay.bounds.size.height-height)*.5,width,height)];
     panel.autoresizingMask=UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
     panel.backgroundColor=[UIColor colorWithRed:.23 green:.29 blue:.40 alpha:1];panel.layer.cornerRadius=11;panel.layer.borderWidth=2;panel.layer.borderColor=[UIColor colorWithWhite:.8 alpha:1].CGColor;[_retroOverlay addSubview:panel];
     [panel addSubview:RetroTitle(self.title,width,36)];
-    UILabel *message=RetroTitle(self.message,width,messageHeight);message.frame=CGRectMake(14,48,width-28,messageHeight);message.font=[UIFont systemFontOfSize:15];message.numberOfLines=0;[panel addSubview:message];
+    UIScrollView *messageScroll=[[UIScrollView alloc] initWithFrame:CGRectMake(14,48,width-28,messageHeight)];
+    messageScroll.contentSize=CGSizeMake(width-28,textHeight);[panel addSubview:messageScroll];
+    UILabel *message=RetroTitle(self.message,width,textHeight);message.frame=CGRectMake(0,0,width-28,textHeight);message.font=[UIFont systemFontOfSize:15];message.numberOfLines=0;[messageScroll addSubview:message];
     for (NSInteger i=0;i<self.numberOfButtons;i++) { UIButton *button=RetroButton([self buttonTitleAtIndex:i],i,NO,self,@selector(retroPressed:));button.frame=CGRectMake(10,52+messageHeight+i*48,width-20,42);[panel addSubview:button]; }
     if ([self.delegate respondsToSelector:@selector(didPresentAlertView:)]) [self.delegate didPresentAlertView:self];
 }
